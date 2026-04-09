@@ -2,4 +2,4 @@
 Setting `decision_agent` as a package to standardise imports
 """
 
-from .agent import
+from .environment import Environment
