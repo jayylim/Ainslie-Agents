@@ -8,6 +8,10 @@ Does a mechanism for predicting your own future behaviour compound into the valu
 - `src/decision_agent/` : contains core code
 - `tests/`: for running tests
 - `docs/`: project and design notes
+
+## Run
+cd src
+python -m decision_agent.main
  
  ## Main Objectives
 - Demonstrate how mechanisms which can be proxies of **will-power** and **self-control** impact value-based deicions
