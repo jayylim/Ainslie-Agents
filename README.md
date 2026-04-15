@@ -24,4 +24,5 @@ python -m decision_agent.main
 
 ## **General Environment and Model**
   - Movements through a grid world towards squares with varying amounts of reward
+  - The environment is deterministic?
 
