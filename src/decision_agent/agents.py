@@ -49,12 +49,12 @@ class ExpAgent:
 
     # setting the policy for the agent
     def choose_action(self, current_position, environment):
-        reward_position = environment.reward_position
 
         # no initial bias towards any action
         best_action = None 
         best_value = float("-inf") # first action will replace this
 
+        # evaluate all actiovns
         for action in self.actions:
             predicted_position = self.simulate(current_position, action, environment) # simulating next position using an internal model
             predicted_value = self.value_function(predicted_position, environment) # determine value of simulated position using value function
