@@ -24,5 +24,13 @@ python -m decision_agent.main
 
 ## **General Environment and Model**
   - Movements through a grid world towards squares with varying amounts of reward
-  - The environment is deterministic?
+    - The multiple-option action space will eventually be important in considering multiple reward options
+  - Assumptions of the model (in line with the IRL examples)
+    - The environment is deterministic
+    - The agent is aware of the rewards' positions
 
+
+## To model:
+  - Decision effects in a 1d space?
+  - Effects of cost in the discounting functions
+  - Incorporate multiple rewards (to simulate bandit-task like options?) + opportunity costs in the value functions
