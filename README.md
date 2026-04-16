@@ -4,11 +4,21 @@
 ## Total Objective (Project Premise)
 Does a mechanism for predicting your own future behaviour compound into the value of current choices
 
-## Repo Structure
-- `src/decision_agent/` : contains core code
-- `tests/`: for running tests
-- `docs/`: project and design notes
-
+## Structure
+```
+ainslie-agents/
+├──src/ # contains core code
+│   └──decision_agent/
+│        ├── __init__.py
+│        ├── config.py
+│        ├── utils.py # for convenience functions
+│        ├── environment.py
+│        ├── agents.py
+│        └── main.py
+├── tests/  # for running tests
+├── docs/ # project and design notes
+└── README.md
+```
 ## Run
 cd src
 python -m decision_agent.main
@@ -35,3 +45,4 @@ python -m decision_agent.main
   - Effects of cost in the discounting functions
   - Incorporate multiple rewards (to simulate bandit-task like options?) + opportunity costs in the value functions
   - to change grid to matplotlib (possibly need to change to using cardinals as well)
+
