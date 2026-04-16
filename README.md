@@ -34,3 +34,4 @@ python -m decision_agent.main
   - Decision effects in a 1d space?
   - Effects of cost in the discounting functions
   - Incorporate multiple rewards (to simulate bandit-task like options?) + opportunity costs in the value functions
+  - to change grid to matplotlib (possibly need to change to using cardinals as well)
