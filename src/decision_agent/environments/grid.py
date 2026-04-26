@@ -3,10 +3,9 @@ Setting the Grid-world Environment
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
-class Environment:
+class GridEnvironment:
     def __init__(self, width, height, reward_position, reward, start=(0,0)): # __init__ defines a library of variables to call
         self.width = width
         self.height = height
@@ -50,40 +49,14 @@ class Environment:
         
         return self.agent_position, earned_reward, finished
     
-    
-    # Displaying the grid with rows and columns (starting form top left) and fill with symbols
-    # def display(self):
-        for y in range(self.height): # y is the row index (vertical plane)
-            symbol = []
-
-            for x in range(self.width): # x is the column index (horizontal plane)
-                if (y, x) == self.agent_position:
-                    symbol.append("@")
-                elif (y, x) == self.reward_position:
-                    symbol.append("$")
-                else:
-                    symbol.append(".")
-
-            print (" ".join(symbol))
         
-        print() # adds a blank line
-        
-    # disply gridworld in plot   
+    # Rendering the grid world as a window  
     def render(self, axes, action):
         # Set coordinate system to match grid
         axes.clear()
         axes.set_xlim(0, self.width)
         axes.set_ylim(self.height, 0)  # invert y so (0,0) is top-left
         axes.set_aspect("equal")
-
-        # grid = np.zeros((self.height, self.width))
-        # r_y, r_x = self.reward_position
-        # grid[r_y, r_x] = 2
-
-        # a_y, a_x = self.agent_position
-        # grid[a_y, a_x] = 1
-
-        # axes.imshow(grid) # renders a simple coloured blocks according to cell intensity 
         
         for col in range(self.width):
             for row in range(self.height):

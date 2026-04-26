@@ -1,49 +1,54 @@
-"""
-Launching runs
-"""
 
-# import relevant variables
-from decision_agent import Environment
+# Control Block
+from decision_agent import GridEnvironment
 from decision_agent import ExpAgent
-import matplotlib.pyplot as plt
-from .utils import clear_console
+from factory import create_environment, create_agent
 
-clear_console()
+run_config = {
+    # Choose model variables
+    "env_type": "grid", # or 2nd type
+    "agent_type": "exponential", # or hyperbolic
+   
 
-#setting up environment
+   # Parameters for each variable type (might be abstracted into a different file eventually)
+    "env_params": {
+        "grid":{
+            "width": 10,
+            "height": 10,
+            "start": (2, 8),
+            "reward_position": (7, 1),
+            "reward": 10,
+        } # continue other model type here if necessary
+    },
 
-environment = Environment(
-    width = 10,
-    height = 10,
-    start = (2, 8),
-    reward_position = (7, 1),
-    reward = 10
-)
+    "agent_params": {
+        "exponential":{
+            "discount_factor": 0.3
+        },
+        "hyperbolic":{
+            "k": 0.2
+        }
+    }
+    #can add override codes here, but then need merging code
+}
 
+# Select Parameter by Model
+env_params = run_config["env_params"][run_config["env_type"]].copy()
+agent_params = run_config["agent_params"][run_config["agent_type"]].copy()
 
-# setting up agent
-agent = ExpAgent()
-state = environment.reset() 
-finished = False
+# Instantiate Model
+environment = create_environment(run_config["env_type"], env_params)
+agent = create_agent(run_config["agent_type"], agent_params)
 
-# run experiment
-fig, axes = plt.subplots()
-plt.ion() # turn on interactive mode for online updating of plots
+# Run model (all methods and variables in this must be consistent across all enviornments and agents)
+state = environment.reset()
+done = False 
 
-while not finished: # runs a loop until done = True
-    action = agent.choose_action(state, environment) # selection action based on policy and value function, etc.
-    state, reward, finished = environment.step(action) # apply action to environment
-    
+while not done:
+    action = agent.select_action(state)
+    state, reward, done = environment.step(action)
+
     value = agent.value_function(state, environment) # get value of current position
     
-    print("Agent moved " + action)
+    print("Agent chose " + action)
     print(state, reward, value)
-
-    environment.render(axes, action)
-    plt.draw()
-    plt.pause(0.5) # control refresh speed
-
-plt.ioff()
-plt.show()
- 
-  
