@@ -9,16 +9,24 @@ Does a mechanism for predicting your own future behaviour compound into the valu
 ainslie-agents/
 ├──src/ # contains core code
 │   └──decision_agent/
-│        ├── __init__.py
-│        ├── config.py
-│        ├── utils.py # for convenience functions
-│        ├── environment.py
-│        ├── agents.py
-│        └── main.py
-├── tests/  # for running tests
-├── docs/ # project and design notes
+│        └──agents/
+│            └── exponential.py # exponential agent
+│            └── hyperbolic.py # hyperbolic agent
+│        └──environments/
+│            └── grid.py # grid world environment
+│        ├── __init__.py # initialisation code
+│        ├── factory.py  # for holding agent/environment configs
+│        ├── main.py # for running the model
+│        └── utils.py # for convenience functions
 └── README.md
 ```
+## Choosing a model
+Under run_config, choose:
+- Environment type
+- Agent type
+- Initialisation parameters for each
+- Run runner/main.py
+
 ## Run
 cd src
 python -m decision_agent.main
@@ -42,6 +50,11 @@ python -m decision_agent.main
 
 ## To model:
   - Decision effects in a 1d space?
+    - Thinking of the homework example, where the environment is a finite-horizon MDP where actions influence future reward availability and future decision difficulty (including temptations)
   - Effects of cost in the discounting functions
   - Incorporate multiple rewards (to simulate bandit-task like options?) + opportunity costs in the value functions
 
+## To structure project
+  - Making it more 'playable' by reorganising files and agenets and environments
+  - need to fix agent dynamics being dependent on the environment
+  
