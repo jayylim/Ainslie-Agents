@@ -5,32 +5,38 @@ import matplotlib.pyplot as plt
 
 run_config = {
     # Choose model variables
-    "env_type": "grid", # or 2nd type
-    "agent_type": "exponential", # or hyperbolic
-   
-
+    "env_type": "grid", # grid or 2nd type
+    "agent_type": "exponential", # exponential or hyperbolic
+    
    # Parameters for each variable type (might be abstracted into a different file eventually)
     "env_params": {
         "grid":{
             "width": 10,
             "height": 10,
-            "start": (2, 8),
-            "reward_position": (7, 1),
-            "reward": 10,
+            "start": (1, 2),
+            "rewards": {
+                "SS": {
+                    "position": (4, 4),
+                    "value": 5
+                },
+                "LL": {
+                    "position": (8, 1),
+                    "value": 10
+                }
+            }
         } # continue other model type here if necessary
     },
 
     "agent_params": {
         "exponential":{
-            "discount_factor": 0.8
+            "discount_factor": 0.6 # effectively a 'value decay rate', constant in one span of time
         },
         "hyperbolic":{
-            "k": 0.2
-        }
+            "discount_factor": 0.6 # effectively a 'value decay rate', varies at different points in one span of time
     }
     #can add override codes here, but then need merging code
+    }
 }
-
 # Select Parameter by Model
 env_params = run_config["env_params"][run_config["env_type"]].copy()
 agent_params = run_config["agent_params"][run_config["agent_type"]].copy()
@@ -47,11 +53,9 @@ fig, axes = plt.subplots()
 plt.ion()
 
 # render initial state
-distance = environment.distance(state)
-value = agent.value_function(environment.reward, distance) # get value of current position
 
 print("Starting...")
-print(state, 0, value, distance)
+print(state, 0)
 
 if hasattr(environment, "render"):
     environment.render(axes) # action default is None
@@ -60,20 +64,28 @@ if hasattr(environment, "render"):
 
 # run model
 while not finished:
-    action = agent.choose_action(state, environment)
-    state, reward, finished = environment.step(action)
+    action = agent.choose_action(state, environment) # agent evaluates and chooses an action
+
+    # == FOR DEBUGGING: INCLUDE AGENT-SIMULATED STEPS ===
+    # re-simulate using environment's exact design
+    next_state, outcomes = environment.simulate(state,action)
+
+    state, earned_reward, finished = environment.step(action) # update position, receive outcome of choice
+
+    print("For this state:")   
+    for name, (reward, delay) in outcomes.items():
+        value = agent.value_function(reward, delay)
+        print(f" {name}: reward={reward}, delay={delay}, value={value}")
     
-    # compute current state value
-    distance = environment.distance(state)
-    value = agent.value_function(reward, distance) # get value of current position
-    
+    print("therefore,")  
     print("Agent chose " + action)
-    print(state, reward, value, distance)
+    print(state, earned_reward)
+
 
     if hasattr(environment, "render"):
         environment.render(axes, action)
         plt.draw()
-        plt.pause(0.5)
+        plt.pause(1)
 
 plt.ioff()
 plt.show()

@@ -4,13 +4,13 @@ Setting the Grid-world Environment
 from matplotlib.patches import Rectangle
 
 class GridEnvironment:
-    def __init__(self, width, height, reward_position, reward, start=(0,0)): # __init__ defines a library of variables to call
+    def __init__(self, width, height, rewards, start=(0,0)): # __init__ defines a library of variables to call
         self.width = width
         self.height = height
-        self.reward_position = reward_position
+        self.rewards = rewards # this will be a dictionary in initialisation
         self.start = start
         self.agent_position = start
-        self.reward = reward # the environment's sole reward
+
 
 # === Environment-Specific Methods ===
 
@@ -45,13 +45,57 @@ class GridEnvironment:
         earned_reward = 0 # actual reward gained for making step 
         finished = False # used as criteria for continuing later
 
-        if self.agent_position == self.reward_position:
-            earned_reward = self.reward
-            finished = True
-        
+        # now check the reward dict to assign value
+        for rewards in self.rewards.values(): 
+            if self.agent_position == rewards["position"]:
+                earned_reward = rewards["value"]
+                finished = True
+                break # stops after the first match
+
         return self.agent_position, earned_reward, finished
-          
-    # Rendering the grid world as a window  
+
+# === Agent-facing Layer (what the agent queries from the environment)=== 
+    def get_actions(self, state=None):
+        return ["up", "down", "right", "left"]
+    
+    # for model-based planning; assume full awareness of transition structure
+    def transitions(self, state, action):
+        row, col = state
+        
+        # Updating position by action
+        if action == "up":
+            row += -1
+        elif action == "down":
+            row += +1
+        elif action == "left":
+            col += -1 
+        elif action == "right":
+            col += +1 
+        
+        col = max(0, min(self.width -1, col)) # clamps columns to be between grid width-1 and 0
+        row = max(0, min(self.height -1, row)) # clamps rows to be between grid height-1 and 0
+    
+        return (row, col) # return new position
+    
+    # For agent to compute next state and check outcomes
+    def simulate(self, state, action):
+
+        next_state = self.transitions(state, action) # simulating next position using an internal model
+
+        outcomes = {} # dictionary for storing possible reward targets (next states)
+        row, col = next_state
+
+        for name, rewards in self.rewards.items(): # iterate through all rewards in the environment
+            goal_row, goal_col = rewards["position"]
+           
+            distance = abs(row - goal_row) + abs(col - goal_col) # distance from reward; in this case, absolute manhattan distance in the grid
+            
+            outcomes[name] = (rewards["value"], distance) # store the value and distance for each reward in evironment
+
+        return next_state, outcomes
+    
+ # === Rendering the grid world as a window ===
+
     def render(self, axes, action=None):
         # Set coordinate system to match grid
         axes.clear()
@@ -61,18 +105,30 @@ class GridEnvironment:
         
         for col in range(self.width):
             for row in range(self.height):
-
-                # specified colours
+                
                 cell_colour = "white"
-
-                if (row, col) == self.reward_position:
-                    cell_colour = "gold" 
-                    axes.text(col + 0.5, row + 0.5 , f"{self.reward}", # create label in the center of the square
-                              ha = "center", va = "center", fontsize = 12) 
+                # specified colours and labels
+                colour_map = { # manually designate colours to reward type
+                    "SS": "orange",
+                    "LL": "gold"
+                }
+                for name, rewards in self.rewards.items(): # checks the rewards dict for 
+                    if (row, col) == rewards["position"]:
+                        cell_colour = colour_map.get(name, "white") # white is the defualt colour
+                    
+                        axes.text(
+                            col + 0.5, 
+                            row + 0.5 , 
+                            f"{rewards['value']}", # create label in the center of the square
+                            ha = "center", 
+                            va = "center", 
+                            fontsize = 12) 
+                        break
+                        
                 if (row, col) == self.agent_position:
                     cell_colour = "dodgerblue"
                 
-                # creating rectangular cells with specified colours
+                # creating rectangular cells with coloured outlines
                 cells = Rectangle( 
                     (col, row),
                     1,
@@ -98,33 +154,3 @@ class GridEnvironment:
         axes.set_xticklabels([])
         axes.set_yticklabels([])
         axes.tick_params(left=False, bottom=False)
-
-# === Agent-facing Layer (what the agent queries from the environment)=== 
-    def get_actions(self, state=None):
-        return ["up", "down", "right", "left"]
-    
-    # for model-based planning; assume full awareness of transition structure
-    def transitions(self, state, action):
-        row, col = state
-        
-        # Updating position by action
-        if action == "up":
-            row += -1
-        elif action == "down":
-            row += +1
-        elif action == "left":
-            col += -1 
-        elif action == "right":
-            col += +1 
-        
-        col = max(0, min(self.width -1, col)) # clamps columns to be between grid width-1 and 0
-        row = max(0, min(self.height -1, row)) # clamps rows to be between grid height-1 and 0
-    
-        return (row, col) # return new position
-    
-    # Calculate distance from goal; agent has full awareness of reward position
-    def distance(self, state):
-        row, col = state
-        goal_row, goal_col = self.reward_position
-        return abs(row - goal_row) + abs(col - goal_col) # absolute manhattan distance from reward
- 
