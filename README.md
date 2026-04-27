@@ -40,21 +40,32 @@ python -m decision_agent.main
   - An agent that performs *exponential discounting* when making a value-based decision
   - An agent that performs *hyperbolic discounting* when making a value-based decision
 
-## **General Environment and Model**
-  - Movements through a grid world towards squares with varying amounts of reward
+## **Current Design Notes for the Model**
+### Environments
+"grid":
+  - Movements through a grid world towards a known reward
     - The multiple-option action space will eventually be important in considering multiple reward options
-  - Assumptions of the model (in line with the IRL examples)
-    - The environment is deterministic
-    - The agent is aware of the rewards' positions
-
+  - **Characteristics and Assumptions:** (w.r.t. IRL examples)
+    - The environment is fully deterministic
+    - The agent is fully aware of the reward's position(s)
+    - The agent is fully aware of the transition structure of the environment 
+### Agents
+"exponential":
+  - **Characteristics and Assumptions held by Agent:**
+    - Explicitly an exponential discounter
+    - No memory of past experiences (Markov)
+    - Non-learning (no updating beliefs)
+    - Environment is remains stable/consistent
+    - Only plans 1 step ahead
+    - Fully certain and experiences no interference (from it's perspective)
+    - The agent is greedy and maximises utility at all decision points
 
 ## To model:
+  - Hyperbolic agent in grid world
   - Decision effects in a 1d space?
     - Thinking of the homework example, where the environment is a finite-horizon MDP where actions influence future reward availability and future decision difficulty (including temptations)
+  - Agent has no/graded awareness of reward position and magnitude (e.g. you don't know when your diet will show results)
   - Effects of cost in the discounting functions
   - Incorporate multiple rewards (to simulate bandit-task like options?) + opportunity costs in the value functions
 
-## To structure project
-  - Making it more 'playable' by reorganising files and agenets and environments
-  - need to fix agent dynamics being dependent on the environment
   
