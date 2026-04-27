@@ -1,8 +1,6 @@
 """
 Setting the Grid-world Environment
 """
-
-import numpy as np
 from matplotlib.patches import Rectangle
 
 class GridEnvironment:
@@ -14,10 +12,14 @@ class GridEnvironment:
         self.agent_position = start
         self.reward = reward # the environment's sole reward
 
+# === Environment-Specific Methods ===
+
+    # reset function (essential for all enviornments)
     def reset (self): #resets agent position when environment.reset()
         self.agent_position = self.start
         return self.agent_position
     
+    # environment interaction rules
     def step(self, action):
         # position counting starts from the top left of the grid, and count from 0
         row, col = self.agent_position
@@ -48,10 +50,9 @@ class GridEnvironment:
             finished = True
         
         return self.agent_position, earned_reward, finished
-    
-        
+          
     # Rendering the grid world as a window  
-    def render(self, axes, action):
+    def render(self, axes, action=None):
         # Set coordinate system to match grid
         axes.clear()
         axes.set_xlim(0, self.width)
@@ -82,8 +83,11 @@ class GridEnvironment:
                 )      
                 axes.add_patch(cells)
 
-        # set title text as agent action choice       
-        axes.set_title(f"Agent moved {action}") 
+        # set title text as agent action choice  
+        if action is None:
+            axes.set_title(f"Starting...")
+        else:
+            axes.set_title(f"Agent moved {action}") 
 
         # grid cell boundaries
         axes.set_xticks(range(self.width))
@@ -95,4 +99,32 @@ class GridEnvironment:
         axes.set_yticklabels([])
         axes.tick_params(left=False, bottom=False)
 
-
+# === Agent-facing Layer (what the agent queries from the environment)=== 
+    def get_actions(self, state=None):
+        return ["up", "down", "right", "left"]
+    
+    # for model-based planning; assume full awareness of transition structure
+    def transitions(self, state, action):
+        row, col = state
+        
+        # Updating position by action
+        if action == "up":
+            row += -1
+        elif action == "down":
+            row += +1
+        elif action == "left":
+            col += -1 
+        elif action == "right":
+            col += +1 
+        
+        col = max(0, min(self.width -1, col)) # clamps columns to be between grid width-1 and 0
+        row = max(0, min(self.height -1, row)) # clamps rows to be between grid height-1 and 0
+    
+        return (row, col) # return new position
+    
+    # Calculate distance from goal; agent has full awareness of reward position
+    def distance(self, state):
+        row, col = state
+        goal_row, goal_col = self.reward_position
+        return abs(row - goal_row) + abs(col - goal_col) # absolute manhattan distance from reward
+ 

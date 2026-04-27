@@ -1,8 +1,7 @@
 
 # Control Block
-from decision_agent import GridEnvironment
-from decision_agent import ExpAgent
-from factory import create_environment, create_agent
+from .factory import create_environment, create_agent
+import matplotlib.pyplot as plt
 
 run_config = {
     # Choose model variables
@@ -23,7 +22,7 @@ run_config = {
 
     "agent_params": {
         "exponential":{
-            "discount_factor": 0.3
+            "discount_factor": 0.8
         },
         "hyperbolic":{
             "k": 0.2
@@ -42,13 +41,40 @@ agent = create_agent(run_config["agent_type"], agent_params)
 
 # Run model (all methods and variables in this must be consistent across all enviornments and agents)
 state = environment.reset()
-done = False 
+finished = False 
 
-while not done:
-    action = agent.select_action(state)
-    state, reward, done = environment.step(action)
+fig, axes = plt.subplots()
+plt.ion()
 
-    value = agent.value_function(state, environment) # get value of current position
+# render initial state
+distance = environment.distance(state)
+value = agent.value_function(environment.reward, distance) # get value of current position
+
+print("Starting...")
+print(state, 0, value, distance)
+
+if hasattr(environment, "render"):
+    environment.render(axes) # action default is None
+    plt.draw()
+    plt.pause(2)
+
+# run model
+while not finished:
+    action = agent.choose_action(state, environment)
+    state, reward, finished = environment.step(action)
+    
+    # compute current state value
+    distance = environment.distance(state)
+    value = agent.value_function(reward, distance) # get value of current position
     
     print("Agent chose " + action)
-    print(state, reward, value)
+    print(state, reward, value, distance)
+
+    if hasattr(environment, "render"):
+        environment.render(axes, action)
+        plt.draw()
+        plt.pause(0.5)
+
+plt.ioff()
+plt.show()
+
