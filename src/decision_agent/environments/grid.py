@@ -12,6 +12,47 @@ class GridEnvironment:
         self.agent_position = start
 
 
+# === Agent-facing Layer (what the agent queries from the environment)=== 
+    def get_actions(self, state=None):
+        return ["up", "down", "right", "left"]
+    
+    # for model-based planning; assume full awareness of transition structure
+    def transitions(self, state, action):
+        row, col = state
+        
+        # Updating position by action
+        if action == "up":
+            row += -1
+        elif action == "down":
+            row += +1
+        elif action == "left":
+            col += -1 
+        elif action == "right":
+            col += +1 
+        
+        col = max(0, min(self.width -1, col)) # clamps columns to be between grid width-1 and 0
+        row = max(0, min(self.height -1, row)) # clamps rows to be between grid height-1 and 0
+    
+        return (row, col) # return new position
+    
+    # For agent to compute next state and check outcomes
+    def simulate(self, state, action):
+
+        next_state = self.transitions(state, action) # simulating next position using an internal model
+
+        outcomes = {} # dictionary for storing possible reward targets (next states)
+        row, col = next_state
+
+        # iterate through all rewards in the environment to find the distance of all rewards
+        for name, rewards in self.rewards.items(): 
+            goal_row, goal_col = rewards["position"]
+           
+            distance = abs(row - goal_row) + abs(col - goal_col) # distance from reward; in this case, absolute manhattan distance in the grid
+            
+            outcomes[name] = (rewards["value"], distance) # store the value and distance for each reward in evironment
+
+        return next_state, outcomes
+    
 # === Environment-Specific Methods ===
 
     # reset function (essential for all enviornments)
@@ -53,48 +94,7 @@ class GridEnvironment:
                 break # stops after the first match
 
         return self.agent_position, earned_reward, finished
-
-# === Agent-facing Layer (what the agent queries from the environment)=== 
-    def get_actions(self, state=None):
-        return ["up", "down", "right", "left"]
-    
-    # for model-based planning; assume full awareness of transition structure
-    def transitions(self, state, action):
-        row, col = state
-        
-        # Updating position by action
-        if action == "up":
-            row += -1
-        elif action == "down":
-            row += +1
-        elif action == "left":
-            col += -1 
-        elif action == "right":
-            col += +1 
-        
-        col = max(0, min(self.width -1, col)) # clamps columns to be between grid width-1 and 0
-        row = max(0, min(self.height -1, row)) # clamps rows to be between grid height-1 and 0
-    
-        return (row, col) # return new position
-    
-    # For agent to compute next state and check outcomes
-    def simulate(self, state, action):
-
-        next_state = self.transitions(state, action) # simulating next position using an internal model
-
-        outcomes = {} # dictionary for storing possible reward targets (next states)
-        row, col = next_state
-
-        for name, rewards in self.rewards.items(): # iterate through all rewards in the environment
-            goal_row, goal_col = rewards["position"]
-           
-            distance = abs(row - goal_row) + abs(col - goal_col) # distance from reward; in this case, absolute manhattan distance in the grid
-            
-            outcomes[name] = (rewards["value"], distance) # store the value and distance for each reward in evironment
-
-        return next_state, outcomes
-    
- # === Rendering the grid world as a window ===
+# === Rendering the grid world as a window ===
 
     def render(self, axes, action=None):
         # Set coordinate system to match grid
@@ -142,8 +142,8 @@ class GridEnvironment:
         # set title text as agent action choice  
         if action is None:
             axes.set_title(f"Starting...")
-        else:
-            axes.set_title(f"Agent moved {action}") 
+        # else:
+            # axes.set_title(f"Agent moved {action}" # moved to main
 
         # grid cell boundaries
         axes.set_xticks(range(self.width))
