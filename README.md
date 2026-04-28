@@ -14,6 +14,7 @@ ainslie-agents/
 │            └── hyperbolic.py # hyperbolic-discounting agent
 │        └──environments/
 │            └── grid.py # grid world environment
+│            └── timeline.py # grid world environment
 │        ├── __init__.py # initialisation code
 │        ├── factory.py  # for holding agent/environment configs
 │        ├── main.py # for running the model
