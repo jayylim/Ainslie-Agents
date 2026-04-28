@@ -17,6 +17,13 @@
     - The agent is fully aware of the rewards' positions and magnitudes
     - The agent is fully aware of the transition structure of the environment 
     - Agent will look-ahead one step
+  
+"rewards in a series result":
+- For observing the effects of "summed rewards" over a longer time scale
+- SS action (e.g. cheat) vs LL action (e.g. diet)
+- Model one instance of this
+- Model long-horizon instance of this
+
 ### Agents
 "exponential":
   - **Characteristics and Assumptions held by Agent:**
@@ -38,13 +45,19 @@
 ### Code Conventions
   - "distance" refers to distance from rewards of all modes (grid steps, time delay, etc.)
   - representations of the environment are **decoupled** from the agent's code
+  - (For now) Every environment must have the methods: *reset*, *get_actions*, *simulate* (which has *outcomes*), *step* 
+  - (For now) Every agent must have the methods: *choose_actions* 
 
 ## To Model/Improve:
-  - Hyperbolic agent in grid world
-  - Decision effects in a 1d space?
-    - Thinking of the homework example, where the environment is a finite-horizon MDP where actions influence future reward availability and future decision difficulty (including temptations)
-  - Agent has no/graded awareness of reward position and magnitude (e.g. you don't know when your diet will show results)
-  - Effects of cost in the discounting functions
+  - Agent has no/graded awareness of reward position and magnitude (i.e. fog of war; e.g. not knowing when your diet will show results)
+  - Effects of cost in the discounting functions?
+ - **Sequential decision points and the importance of summed hyperbolic/exponential rewards**
+   - **[to do]: adding long-sightedness to agent + switchable parameter for vision depth**  
+   - effects of using different "methods" to moderate vision depth (E.g. personal rules, emotional preparedness)
+ - Evaluating whole **trajectories** from increasing depth (while remaining time-inconsistent), not very consistent with hyperbolic-discounters
+ - Effects of beliefs about one's preferences
+   - recursion for *sophisticated* hyperbolic discounters (currently implicitly naive)
+
  
  ## To Restructure (for future-proofing):
   1. ~~Make agent purely evaluation; agent should not know how rewards are stored, what "distance" means, what the state looks like structurally~~
