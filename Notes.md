@@ -39,7 +39,7 @@
   
 `"hyperbolic"`:
   - **Characteristics and Assumptions held by Agent:**
-    - Explicitly an exponential discounter
+    - Explicitly a hyperbolic discounter
     - No memory of past experiences (Markov)
     - Non-learning (no updating beliefs)
     - Assumes nvironment remains stable/consistent
