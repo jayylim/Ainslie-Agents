@@ -10,7 +10,7 @@
 ## **Current Design Notes for the Model**
 
 ### Environments
-"grid":
+`"grid"`:
   - Movements through a grid world, states corresponding to occupiable grid-squares, moving towards known reward
   - **Characteristics and Assumptions:** (w.r.t. IRL examples)
     - The environment is fully deterministic
@@ -18,27 +18,30 @@
     - The agent is fully aware of the transition structure of the environment 
     - Agent will look-ahead one step
   
-"rewards in a series result":
+`"timeline"`:
+- Timeline of sequential decisions, where the same decision is offered at every time step independent of the past decision
+  - decision between SS action (e.g. snack) vs LL action (e.g. resist and stick to diet)
+  - in `"Rtimeline"`: receiving the LL-reward is conditional on choosing LL-action until delay is over
 - For observing the effects of "summed rewards" over a longer time scale
-- SS action (e.g. cheat) vs LL action (e.g. diet)
-- Model one instance of this
-- Model long-horizon instance of this
+  - myopic vs long-sighted agent will have different reactions to this
+  - longsighted exponential vs long-sighted hyperbolic will also have different reactions
+
 
 ### Agents
-"exponential":
+`"exponential"`:
   - **Characteristics and Assumptions held by Agent:**
     - Explicitly an exponential discounter
     - No memory of past experiences (Markov)
     - Non-learning (no updating beliefs)
-    - Environment is remains stable/consistent
+    - Assumes environment remains stable/consistent
     - Fully certain and experiences no interference (from it's perspective)
     - The agent is greedy and maximises utility at all decision points
-"hyperbolic":
+`"hyperbolic"`:
   - **Characteristics and Assumptions held by Agent:**
     - Explicitly an exponential discounter
     - No memory of past experiences (Markov)
     - Non-learning (no updating beliefs)
-    - Environment is remains stable/consistent
+    - Assumes nvironment remains stable/consistent
     - Fully certain and experiences no interference (from it's perspective)
     - The agent is greedy and maximises utility at all decision points
 
@@ -53,6 +56,8 @@
   - Effects of cost in the discounting functions?
  - **Sequential decision points and the importance of summed hyperbolic/exponential rewards**
    - ~~**[to do]: adding long-sightedness to agent + switchable parameter for vision depth**~~  
+   - ~~ability to gain LL if and only if it consistently chooses resist (currently gets 188 even if switches at step 18)~~
+     - self-prediction layer will tune the agent's `"belief"` to moderate its awareness of this
    - effects of using different "methods" to moderate vision depth (E.g. personal rules, emotional preparedness) -> make vision depth tunable
  - Evaluating whole **trajectories** from increasing depth (while remaining time-inconsistent), not very consistent with hyperbolic-discounters?
  - Effects of beliefs about one's preferences
@@ -62,5 +67,5 @@
  ## To Restructure (for future-proofing):
   1. ~~Make agent purely evaluation; agent should not know how rewards are stored, what "distance" means, what the state looks like structurally~~
   2. ~~Remove reward structure awareness in agent; agent should never access internal dictionaries into the environment~~
-  3. Separate policy from the agent
+  3. Separate policy greedy from the agent
   4. Make it such that for myopic agent, the environment length can be less?
