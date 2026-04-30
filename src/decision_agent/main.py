@@ -1,72 +1,45 @@
 
 # Control Block
 from .factory import create_environment, create_agent
+from .env_configs import param_config
+# from .graphs import plot_value_functions
 import matplotlib.pyplot as plt
 from decision_agent import GridEnvironment # only needed for the debugging stuff
 
-run_config = {
-    # Choose model variables
-    "env_type": "grid", # grid or timeline
-    "agent_type": "exponential", # exponential or hyperbolic
-    
-   # Parameters for each variable type (might be abstracted into a different file eventually)
-    "env_params": {
-        "grid":{
-            "width": 10,
-            "height": 10,
-            "start": (1, 2),
-            "rewards": {
-                "SS": {
-                    "position": (4, 4),
-                    "value": 5
-                },
-                "LL": {
-                    "position": (8, 1),
-                    "value": 10
-                }
-            }
-        }, # continue other model type here if necessary
-        "timeline":{
-            "length": 100,
-            "rewards": {
-                "SS": {
-                    "value": 5,
-                    "delay": 0
-                },
-                "LL": {
-                    "value": 10,
-                    "delay": 3
-                }
-            }
-        
-        }
+
+# === Instantiate Model === 
+# Choose model variables
+agent_config = {
+    "exponential":{
+        "discount_factor": 0.6, # effectively a 'value decay rate', constant in one span of time
+        "vision": "myopic" # myopic or long-sighted
     },
-
-    "agent_params": {
-        "exponential":{
-            "discount_factor": 0.6 # effectively a 'value decay rate', constant in one span of time
-        },
-        "hyperbolic":{
-            "discount_factor": 0.6 # effectively a 'value decay rate', varies at different points in one span of time
-    }
-    #can add override codes here, but then need merging code
-    }
+    "hyperbolic":{
+        "discount_factor": 0.6, # effectively a 'value decay rate', varies at different points in one span of time
+        "vision": "long-sighted"
 }
-# Select Parameter by Model
-env_params = run_config["env_params"][run_config["env_type"]].copy()
-agent_params = run_config["agent_params"][run_config["agent_type"]].copy()
+#can add override codes here, but then need merging code
+}
 
-# Instantiate Model
+run_config = {
+    "env_type": "timeline", # grid or timeline
+    "agent_type": "hyperbolic", # exponential or hyperbolic  
+}
+
+# Select Parameter by Model
+env_params = param_config["env_params"][run_config["env_type"]].copy()
+agent_params = agent_config[run_config["agent_type"]].copy()
+
+# instantiate
 environment = create_environment(run_config["env_type"], env_params)
 agent = create_agent(run_config["agent_type"], agent_params)
 
-# Run model (all methods and variables in this must be consistent across all enviornments and agents)
+# === Run model ===
+# (all methods and variables in this must be consistent across all enviornments and agents)
 state = environment.reset()
 finished = False 
 
-
 # render initial state
-
 print("Starting...")
 print(state, 0)
 
@@ -110,4 +83,3 @@ while not finished:
 
 plt.ioff()
 plt.show()
-
