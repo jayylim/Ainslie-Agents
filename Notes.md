@@ -36,6 +36,7 @@
     - Assumes environment remains stable/consistent
     - Fully certain and experiences no interference (from it's perspective)
     - The agent is greedy and maximises utility at all decision points
+  
 `"hyperbolic"`:
   - **Characteristics and Assumptions held by Agent:**
     - Explicitly an exponential discounter
