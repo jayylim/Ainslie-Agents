@@ -22,7 +22,7 @@ agent_config = {
 }
 
 run_config = {
-    "env_type": "timeline", # grid or timeline
+    "env_type": "Rtimeline", # grid or timeline or Rtimeline
     "agent_type": "hyperbolic", # exponential or hyperbolic  
 }
 
@@ -55,21 +55,19 @@ if hasattr(environment, "render"): # currently only grid world
 while not finished:
     action, action_values = agent.choose_action(state, environment) # agent evaluates and chooses an action
 
-    state, earned_reward, finished = environment.step(action) # update position, receive outcome of choice
-
-
-    print("Current options:", action_values)
-    
-    # == FOR DEBUGGING: CHECKING HOW AGENT DISCOUNTS ===
+        # == FOR DEBUGGING: CHECKING HOW AGENT DISCOUNTS ===
     if isinstance(environment, GridEnvironment):
 
             # re-simulate using environment's exact design
         next_state, outcomes = environment.simulate(state,action)
-        print("For this state:")   
+        print("FOR STATE " + f"{state}" + ":")   
         for name, (reward, delay) in outcomes.items():
             value = agent.value_function(reward, delay)
             print(f" {name}: reward={reward}, delay={delay}, value={value}")
+    
+    state, earned_reward, finished = environment.step(action) # update position, receive outcome of choice
 
+    print("Current options:", action_values)
     print("therefore,")
     print("Agent " + f"({run_config['agent_type']}) " + "chose " + action)
     print(state, earned_reward)

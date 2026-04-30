@@ -28,18 +28,17 @@ class HypAgent:
         # fallback
         return 1
 
-    # sampling the decision node at every future time step, and summing discounted value for the same repeated action
-    def long_value(self, state, action, environment):
+    # sampling the decision node at every future time step, and aggregate discounted value for the same repeated action
+    def agg_value(self, state, action, environment):
          total_value = 0
          current_state = state # the current time step of agent
-
          horizon = self.get_horizon(state, environment)
          
          for t in range(horizon): # iterate through all future time steps
             next_state, outcomes = environment.simulate(current_state, action)
               # the value of this future time step
             for reward, delay in outcomes.values():
-                effective_delay = delay + t
+                effective_delay = delay + t # Delay + time until future decision happens
                 total_value += self.value_function(reward, effective_delay)
 
             current_state = next_state # updates the state by 1
@@ -58,7 +57,7 @@ class HypAgent:
                 )
                 return value
             elif self.vision == "long-sighted":
-                return self.long_value(state, action, environment)
+                return self.agg_value(state, action, environment)
     
     def choose_action(self, state, environment):
 
