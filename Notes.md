@@ -52,9 +52,9 @@
   - Agent has no/graded awareness of reward position and magnitude (i.e. fog of war; e.g. not knowing when your diet will show results)
   - Effects of cost in the discounting functions?
  - **Sequential decision points and the importance of summed hyperbolic/exponential rewards**
-   - **[to do]: adding long-sightedness to agent + switchable parameter for vision depth**  
-   - effects of using different "methods" to moderate vision depth (E.g. personal rules, emotional preparedness)
- - Evaluating whole **trajectories** from increasing depth (while remaining time-inconsistent), not very consistent with hyperbolic-discounters
+   - ~~**[to do]: adding long-sightedness to agent + switchable parameter for vision depth**~~  
+   - effects of using different "methods" to moderate vision depth (E.g. personal rules, emotional preparedness) -> make vision depth tunable
+ - Evaluating whole **trajectories** from increasing depth (while remaining time-inconsistent), not very consistent with hyperbolic-discounters?
  - Effects of beliefs about one's preferences
    - recursion for *sophisticated* hyperbolic discounters (currently implicitly naive)
 
@@ -63,3 +63,4 @@
   1. ~~Make agent purely evaluation; agent should not know how rewards are stored, what "distance" means, what the state looks like structurally~~
   2. ~~Remove reward structure awareness in agent; agent should never access internal dictionaries into the environment~~
   3. Separate policy from the agent
+  4. Make it such that for myopic agent, the environment length can be less?
