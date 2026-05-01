@@ -34,7 +34,7 @@ param_config = {
             }
         },
          "Rtimeline":{
-            "length": None,
+            "length": 1,
             "start": 0,
             "rewards": {
                 "SS": {
@@ -42,8 +42,8 @@ param_config = {
                     "delay": 0
                 },
                 "LL": {
-                    "value": 10,
-                    "delay": 5
+                    "value": 20,
+                    "delay": 4
                 }
             }
          }

@@ -45,6 +45,7 @@
     - Assumes nvironment remains stable/consistent
     - Fully certain and experiences no interference (from it's perspective)
     - The agent is greedy and maximises utility at all decision points
+    - `"vision"` and `"horizon"` currently only binary, with long-sighted horizon equal to the full length of timeline (can be decoupled in future)
 
 ### Code Conventions
   - "distance" refers to distance from rewards of all modes (grid steps, time delay, etc.)
@@ -70,3 +71,6 @@
   2. ~~Remove reward structure awareness in agent; agent should never access internal dictionaries into the environment~~
   3. Separate policy greedy from the agent
   4. Make it such that for myopic agent, the environment length can be less?
+
+## For Visualisation:
+  1. What it's like for the reward to move towards the agent over time (agent's vertical position scales along the hyperbolic curve; reward represented by "wall" is coming TOWARDS you (the left))

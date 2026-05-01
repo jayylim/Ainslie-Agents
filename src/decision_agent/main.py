@@ -15,7 +15,7 @@ agent_config = {
         "vision": "myopic" # myopic or long-sighted
     },
     "hyperbolic":{
-        "discount_factor": 0.6, # effectively a 'value decay rate', varies at different points in one span of time
+        "discount_factor": 0.8, # effectively a 'value decay rate', varies at different points in one span of time
         "vision": "long-sighted"
 }
 #can add override codes here, but then need merging code
@@ -25,6 +25,9 @@ run_config = {
     "env_type": "Rtimeline", # grid or timeline or Rtimeline
     "agent_type": "hyperbolic", # exponential or hyperbolic  
 }
+
+step_mode = False # switch for manual stepping
+
 
 # Select Parameter by Model
 env_params = param_config["env_params"][run_config["env_type"]].copy()
@@ -78,6 +81,11 @@ while not finished:
         axes.set_title("Agent " + f"({run_config['agent_type']}) " + "chose " + action)
         plt.draw()
         plt.pause(0.5)
+
+    if step_mode:
+        cmd = input("Press Enter for next step or 'q' to quit: ")
+        if cmd.lower() == "q":
+            break
 
 plt.ioff()
 plt.show()

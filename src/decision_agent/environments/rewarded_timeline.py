@@ -52,17 +52,6 @@ class RTimelineEnvironment:
 
         if action != "resist":
             self.pending_rewards = [] # lose all pending rewards if break streak
-        
-        # update all pending rewards
-        currently_pending = [] # buffer for updating rewards
-        for r in self.pending_rewards: # iterates through all stored pending_reward dicts
-            r["time_to"] -= 1
-
-            if r["time_to"] == 0:
-                earned_reward += r["value"] # earn the delayed reward
-            else:
-                currently_pending.append(r)
-        self.pending_rewards = currently_pending # update the pending_rewards array
 
         # update incoming rewards based on reward info selected
         if action == "snack":
@@ -73,6 +62,17 @@ class RTimelineEnvironment:
                 "value": reward_info["value"],
                 "time_to": reward_info["delay"]
             })
+            
+        # update all pending rewards
+        currently_pending = [] # buffer for updating rewards
+        for r in self.pending_rewards: # iterates through all stored pending_reward dicts
+            r["time_to"] -= 1
+
+            if r["time_to"] == 0:
+                earned_reward += r["value"] # earn the delayed reward
+            else:
+                currently_pending.append(r)
+        self.pending_rewards = currently_pending # update the pending_rewards array
 
         # update agent's position
         self.time_step += 1
@@ -96,26 +96,35 @@ class RTimelineEnvironment:
         y_LL = -0.05
         axes.plot([0, self.length], [y_SS, y_SS], color = "red")
         axes.plot([0, self.length], [y_LL, y_LL], color ="blue")
-        axes.text(-3, y_SS, "snack", va="center")
-        axes.text(-3, y_LL, "diet", va="center")
+        axes.text(-2, y_SS, "snack", va="center")
+        axes.text(-2, y_LL, "diet (resist)", va="center")
         
-        # tracking horizon and reward
+        # tracking progress, horizon and reward
         axes.text(
-            -2, # x position
+            -1, # x position
             y_LL-0.1,
-            f"Horizon: {self.length-self.time_step} time steps",
+            f"Progress: {self.time_step} step(s)",
             ha="left",
             fontsize=10,
             color="black"
             )
         axes.text(
-            -2, # x position
+            -1, # x position
             y_LL-0.15,
+            f"Horizon: {self.length-self.time_step} time step(s)",
+            ha="left",
+            fontsize=10,
+            color="black"
+            )
+        axes.text(
+            -1, # x position
+            y_LL-0.2,
             f"Total Reward: {self.total_reward}",
             ha="left",
             fontsize=10,
             color="black"
             )
+        
             
 
         # drawing ticks
