@@ -29,7 +29,7 @@ param_config = {
                 },
                 "LL": {
                     "value": 10,
-                    "delay": 3
+                    "delay": 10
                 }
             }
         },

@@ -71,6 +71,9 @@
   2. ~~Remove reward structure awareness in agent; agent should never access internal dictionaries into the environment~~
   3. Separate policy greedy from the agent
   4. Make it such that for myopic agent, the environment length can be less?
+  5. Make some environmental defaults so I don't get lost everytime I bootup
 
 ## For Visualisation:
-  1. What it's like for the reward to move towards the agent over time (agent's vertical position scales along the hyperbolic curve; reward represented by "wall" is coming TOWARDS you (the left))
+  1. ~~What it's like for the reward to move towards the agent over time (agent's vertical position scales along the hyperbolic curve; reward represented by "wall" is coming TOWARDS you (the left))~~
+     1. ~~Integrate into main flow~~
+     2. 

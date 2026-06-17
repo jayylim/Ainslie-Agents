@@ -17,7 +17,7 @@ agent_config = {
     "hyperbolic":{
         "discount_factor": 0.8, # effectively a 'value decay rate', varies at different points in one span of time
         "vision": "long-sighted"
-}
+    }
 #can add override codes here, but then need merging code
 }
 

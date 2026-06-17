@@ -20,6 +20,7 @@ ainslie-agents/
 │        ├── factory.py  # for holding agent/environment configs
 │        ├── main.py # for running the model
 │        └── utils.py # for convenience functions
+│        └── visualise.py # separate visualisation code
 └── README.md
 ```
 ## Running a Model
@@ -27,6 +28,7 @@ In `main.py`, under `run_config` , choose:
 - Environment type
 - Agent type
 - Initialisation parameters for each
+- Select correct debugger
 - Run main.py
 
 ## Run
