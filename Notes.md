@@ -47,6 +47,15 @@
     - The agent is greedy and maximises utility at all decision points
     - `"vision"` and `"horizon"` currently only binary, with long-sighted horizon equal to the full length of timeline (can be decoupled in future)
 
+### Runners
+`main.py`:
+- Simulates model-based decision making of the agent
+  
+`visualise.py`:
+- Renders visual of reward moving closer to the agent as time goes by
+- The code assumes that the **environment actually changes** over the course of the simulation -> mutates (the horizon of) the environment as *x* (time step) increases
+  - i.e. visualisation affects the environment and the same environment shouldn't be used for other simulations later/concurrently
+
 ### Code Conventions
   - "distance" refers to distance from rewards of all modes (grid steps, time delay, etc.)
   - representations of the environment are **decoupled** from the agent's code
@@ -76,4 +85,7 @@
 ## For Visualisation:
   1. ~~What it's like for the reward to move towards the agent over time (agent's vertical position scales along the hyperbolic curve; reward represented by "wall" is coming TOWARDS you (the left))~~
      1. ~~Integrate into main flow~~
-     2. 
+  2. Reward moving closer for when two rewards are present
+     1. ~~Generate simultaneous animations for both curves~~
+     2. model the decision node
+     3. Show SS curve disappearing once decision has been made

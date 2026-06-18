@@ -1,4 +1,4 @@
-# Import Packages and Moduels
+# Import Packages and Modules
 from .factory import create_environment, create_agent
 from .env_configs import param_config
 import matplotlib.pyplot as plt
@@ -54,8 +54,6 @@ y_max = reward_value+1
 for frame in range(reward_distance+1):
 
     axes.clear()
-
-
     axes.set_xlim(-0.2, x_max) 
     axes.set_ylim(0, y_max) 
 
