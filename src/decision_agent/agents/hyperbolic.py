@@ -9,7 +9,7 @@ class HypAgent:
     def __init__(self, discount_factor=0.8, vision="myopic", horizon=None): # set default discount arbitrarily to 0.8
         self.discount_factor = discount_factor
         self.vision = vision # categorical to be tunable in future
-        self.horizon = horizon # to infer form environment
+        self.horizon = horizon # to infer from environment
     
     # the value function
     def value_function(self, reward, distance): ## might change in the future to limit agent's knowledge of the environment class

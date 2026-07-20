@@ -124,9 +124,7 @@ class RTimelineEnvironment:
             fontsize=10,
             color="black"
             )
-        
             
-
         # drawing ticks
         for t in range(1, self.length +1):
             axes.plot([t,t], [y_SS+0.02, y_SS-0.02], color = "red")

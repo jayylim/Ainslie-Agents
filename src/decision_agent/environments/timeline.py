@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 
 
 class TimelineEnvironment:
-    def __init__(self, rewards, length=10, start=0): 
+    def __init__(self, rewards, length=20, start=0): 
         self.rewards = rewards # this will be a dictionary that stores the rewards for each choice
-        self.length = length if length is not None else 10# this will be a variable that controls the length of the choice horizon
+        self.length = length if length is not None else 20# this will be a variable that controls the length of the choice horizon
         self.start = start # starting of whole simulation (e.g. day 0)
         self.time_step = start # the current time step along the horizon; effectively "agent_position"
 
@@ -77,6 +77,16 @@ class TimelineEnvironment:
             y_LL-0.1,
             f"Horizon: {self.length-self.time_step} time steps",
             ha="center",
+            fontsize=10,
+            color="black"
+            )
+        
+        # tracking time step
+        axes.text(
+            0, # x position
+            y_LL-0.15,
+            f"Time step: {self.time_step}",
+            ha="right",
             fontsize=10,
             color="black"
             )

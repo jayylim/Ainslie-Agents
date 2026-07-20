@@ -1,11 +1,12 @@
 # Import Packages and Modules
 from .factory import create_environment, create_agent
 from .env_configs import param_config
-import matplotlib.pyplot as plt
 import matplotlib
+matplotlib.use('MacOSX')
+import matplotlib.pyplot as plt
 import numpy as np
 
-matplotlib.use('MacOSX')
+
 
 # === Instantiate Model Parameters and Modules === 
 # Choose model variables
@@ -18,6 +19,8 @@ agent_config = {
         "discount_factor": 0.8, # effectively a 'value decay rate', varies at different points in one span of time
         "vision": "long-sighted"
     }
+
+    
 }
 
 run_config = { # for simple hyperbolic, timeline + hyperbolic is default

@@ -34,16 +34,16 @@ param_config = {
             }
         },
          "Rtimeline":{
-            "length": 1,
+            "length": None,
             "start": 0,
             "rewards": {
                 "SS": {
-                    "value": 6,
-                    "delay": 0
+                    "value": 5,
+                    "delay": 6
                 },
                 "LL": {
-                    "value": 20,
-                    "delay": 4
+                    "value": 15,
+                    "delay": 10
                 }
             }
          }
