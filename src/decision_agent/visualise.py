@@ -73,7 +73,7 @@ for frame in range(reward_distance+1):
     axes.plot(time_step, values)
     axes.axvline(reward_distance, linestyle = '--')
     axes.scatter(0, perceived_value, s= 50, color= "black")
-    axes.text(0, perceived_value + 0.5, round(perceived_value, 2), ha="center", size = 14)
+    axes.text(0, perceived_value - 1, round(perceived_value, 2), ha="left", size = 13)
     axes.set_title("time = " + str(frame))
     
     reward_distance -= 1
