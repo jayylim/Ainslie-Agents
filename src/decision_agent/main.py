@@ -5,7 +5,7 @@ from .env_configs import param_config
 # from .graphs import plot_value_functions
 import matplotlib.pyplot as plt
 from decision_agent import GridEnvironment # only needed for the debugging stuff
-
+from .forviz import render_curves
 
 # === Instantiate Model === 
 # Choose model variables
@@ -16,7 +16,7 @@ agent_config = {
     },
     "hyperbolic":{
         "discount_factor": 0.8, # effectively a 'value decay rate', varies at different points in one span of time
-        "vision": "long-sighted"
+        "vision": "myopic"
     }
 #can add override codes here, but then need merging code
 }
@@ -26,7 +26,7 @@ run_config = {
     "agent_type": "hyperbolic", # exponential or hyperbolic  
 }
 
-step_mode = False # switch for manual stepping
+step_mode = True # switch for manual stepping
 
 
 # Select Parameter by Model
@@ -46,14 +46,15 @@ finished = False
 print("Starting...")
 print(state, 0)
 
-if hasattr(environment, "render"): # currently only grid world
-    fig, axes = plt.subplots()
+if hasattr(environment, "render"):
+    fig, (ax_env, ax_curve) = plt.subplots(1, 2, figsize = (13,5))
     plt.ion()
 
-    environment.render(axes) # action default is None
+    environment.render(ax_env) # action default is None
+    render_curves(ax_curve, environment, agent, state)
     plt.draw()
-    plt.pause(2)
-
+    plt.waitforbuttonpress()
+ 
 # run model
 while not finished:
     action, action_values = agent.choose_action(state, environment) # agent evaluates and chooses an action
@@ -76,11 +77,14 @@ while not finished:
     print(state, earned_reward)
 
 
-    if hasattr(environment, "render"): # currently only grid world
-        environment.render(axes, action)
-        axes.set_title("Agent " + f"({run_config['agent_type']}) " + "chose " + action)
-        plt.draw()
-        plt.pause(0.5)
+    if hasattr(environment, "render"):
+        environment.render(ax_env, action)
+        ax_env.set_title("Agent " + f"({run_config['agent_type']}) " + "chose " + action)
+
+    render_curves(ax_curve, environment, agent, state)
+
+    plt.draw()
+    plt.pause(1)
 
     if step_mode:
         cmd = input("Press Enter for next step or 'q' to quit: ")

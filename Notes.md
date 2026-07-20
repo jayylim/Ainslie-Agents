@@ -55,6 +55,8 @@
 - Renders visual of reward moving closer to the agent as time goes by
 - The code assumes that the **environment actually changes** over the course of the simulation -> mutates (the horizon of) the environment as *x* (time step) increases
   - i.e. visualisation affects the environment and the same environment shouldn't be used for other simulations later/concurrently
+- `visualise2.py` showing SS vs LL with decision-making frame
+- `visualise3.py` showing SS vs LL without decision making frame, but highlighting greater reward -> effectively shows when SS temptation will overtake
 
 ### Code Conventions
   - "distance" refers to distance from rewards of all modes (grid steps, time delay, etc.)
