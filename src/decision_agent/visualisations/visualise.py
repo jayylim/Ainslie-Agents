@@ -1,6 +1,6 @@
 # Import Packages and Modules
-from .factory import create_environment, create_agent
-from .env_configs import param_config
+from ..factory import create_environment, create_agent
+from ..env_configs import param_config
 import matplotlib.pyplot as plt
 import matplotlib
 

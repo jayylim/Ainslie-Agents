@@ -1,6 +1,6 @@
 # Import Packages and Modules
-from .factory import create_environment, create_agent
-from .env_configs import param_config
+from ..factory import create_environment, create_agent
+from ..env_configs import param_config
 import matplotlib
 matplotlib.use('MacOSX')
 import matplotlib.pyplot as plt
@@ -84,7 +84,7 @@ for frame in range(x_max + 1):
             time_step.append(t)
             values.append(value)
 
-        perceived_value = choices[name]
+        current_value = choices[name]
 
         # Plot curve
         axes.plot(time_step, values, label=name)
@@ -93,11 +93,11 @@ for frame in range(x_max + 1):
         axes.axvline(reward_distance, linestyle="--", color="black", alpha=0.3)
 
         # Plot current perceived value
-        axes.scatter(0, perceived_value, s=50, color="black")
+        axes.scatter(0, current_value, s=50, color="black")
         axes.text(
             0,
-            perceived_value + 0.2,
-            round(perceived_value, 2),
+            current_value + 0.2,
+            round(current_value, 2),
             ha="center",
             size=10
         )
@@ -106,7 +106,7 @@ for frame in range(x_max + 1):
         if name == winner:
             axes.scatter(
                 0,
-                perceived_value,
+                current_value,
                 s=130,
                 facecolors="none",
                 edgecolors="gold",
@@ -115,7 +115,7 @@ for frame in range(x_max + 1):
 
             axes.text(
                 0,
-                perceived_value + 0.5,
+                current_value + 0.8,
                 f"Winner: {winner}",
                 ha="center",
                 size=10
