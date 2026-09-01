@@ -22,7 +22,7 @@ agent_config = {
 }
 
 run_config = {
-    "env_type": "Rtimeline", # grid or timeline or Rtimeline
+    "env_type": "timeline", # grid or timeline or Rtimeline
     "agent_type": "hyperbolic", # exponential or hyperbolic  
 }
 

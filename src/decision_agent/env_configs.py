@@ -25,11 +25,11 @@ param_config = {
             "rewards": {
                 "SS": {
                     "value": 5,
-                    "delay": 6
+                    "delay": 8
                 },
                 "LL": {
                     "value": 15,
-                    "delay": 10
+                    "delay": 15
                 }
             }
         },

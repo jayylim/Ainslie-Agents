@@ -94,13 +94,22 @@ for frame in range(x_max + 1):
 
         # Plot current perceived value
         axes.scatter(0, current_value, s=50, color="black")
-        axes.text(
-            0,
-            current_value + 0.2,
-            round(current_value, 2),
-            ha="center",
-            size=10
-        )
+        if name == winner:
+            axes.text(
+                0,
+                current_value + 0.5,
+                f"{name}: {round(current_value, 2)}",
+                ha="center",
+                size=10
+            ),
+        else:
+              axes.text(
+                0,
+                current_value - 0.7,
+                f"{name}: {round(current_value, 2)}",
+                ha="center",
+                size=10
+            ),
 
         # Highlight the winner for this frame
         if name == winner:
@@ -115,10 +124,11 @@ for frame in range(x_max + 1):
 
             axes.text(
                 0,
-                current_value + 0.8,
-                f"Winner: {winner}",
-                ha="center",
-                size=10
+                8,
+                f"Choice: {winner}",
+                ha="left",
+                size=14,
+                color = "red"
             )
 
     axes.legend(loc="upper center")
