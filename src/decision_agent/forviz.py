@@ -46,6 +46,6 @@ def render_curves(axes, environment, agent, state):
             axes.text(0, perceived_value + 0.2, round(perceived_value, 2), ha="center", size = 10)
 
         axes.set_title("Value Curves of Current Choice")
-
+  
 
 
