@@ -13,6 +13,13 @@
 - Environment does not care about choice history (currently)
 - doesn't care about the reward he HAS received, and only looks at each individual decision.
 
+### Stickiness
+Let the stickiness parameter (*s*) be P(decision_{t+1} = decision_t) for all t
+
+
+
+### 13 Oct Brain Storm
+
 - The agent can either have short-sighted (where it never aggregates, or effectively has vision = 1) or be long-sighted (where it aggregates over a set vision length)
   - If the environment is infinite, then the vision length takes priority
   - If the environment has a fixed length, then the vision length caps at max duration. (If set to none, it will always take the max available length).
@@ -33,7 +40,7 @@ If you choose for just 1 night, you see the identical decision
 
 now based on the current environment, agent and run code, i want to add a visualisation of the experiment that is run by @src/simplified decision agent/main.py. The aggregated SS and LL values should be present as a hyperbolic curve sail increasing towards positive x (where x axis is time to reward)
 
-## Redefining the environment
+#### Redefining the environment
 **environmen definition**
 - an environment where you are in pursuit of an LL but faced with SS every decision node
 - the LL is of a fixed value and delay, but is repeatedly offered to you in the future. This means that you face the prospect of multiple delayed rewards. 
