@@ -17,7 +17,7 @@ from environments.timeline import TimelineEnvironment
 
 # === Params ===
 env_params = {
-    "length": 240,  # 10 days (240 hours); or None for infinite
+    "length": None,  # 10 days (240 hours); or None for infinite
     "start": 0,
     "decision_interval": 24,  # hours between decisions
     "rewards": {
@@ -29,7 +29,7 @@ env_params = {
 agent_params = {
     "discount_factor": 0.8,
     "vision": "long",  # "short" or "long"
-    "horizon": 6,  # max # of decisions to plan; capped by remaining env decisions, includes the current day (min. 1)
+    "horizon": 10,  # max # of decisions to plan; capped by remaining env decisions, includes the current day (min. 1)
 }
 
 max_steps = 10  # used when env length is None; also caps the run as a safety stop
