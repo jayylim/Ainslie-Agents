@@ -17,12 +17,12 @@ from environments.timeline import TimelineEnvironment
 
 # === Params ===
 env_params = {
-    "length": None,  # 10 days (240 hours); or None for infinite
+    "length": 240,  # Time in hours; or None for infinite
     "start": 0,
     "decision_interval": 24,  # hours between decisions
     "rewards": {
         "SS": {"value": 5, "delay": 0},   # snack now
-        "LL": {"value": 15, "delay": 12},  # hours after choice until weigh-in
+        "LL": {"value": 30, "delay": 12},  # hours after choice until weigh-in
     },
 }
 

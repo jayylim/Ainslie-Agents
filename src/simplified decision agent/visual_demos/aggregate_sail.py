@@ -1,18 +1,19 @@
 """
-Classic Ainslie sail from day-1 horizon aggregates.
+Classic Ainslie sail from day-1 horizon outcomes.
 
-The agent still plans over its vision horizon from day 1. Those outcomes are
-collapsed into two magnitudes for a simple comparison:
+Matches HypAgent: each reward is discounted from the current decision, then
+those values are summed (agents.hyperbolic.HypAgent.aggregate_value).
 
-  - resist (LL): one hyperbolic curve whose peak is the value of the whole
-    LL bundle at the first LL delivery (≈15 + residual later LLs)
-  - snack (SS): one dot at t=0 with height = aggregated SS value
+  - resist (LL): one curve where at each time t the height is the sum of
+    V(reward_i, delay_i - t) over LLs still outstanding
+  - snack (SS): one dot at t=0 with height = day-1 snack aggregate
+    (same as action_values["snack"])
 
 No stepping through the environment.
 
 Run from the package root:
 
-    python -m visual_demos.snapshot_sail
+    python -m visual_demos.aggregate_sail
 """
 
 import matplotlib
@@ -37,23 +38,15 @@ COLORS = {"snack": "#c44e52", "resist": "#4c72b0"}
 
 
 def horizon_events(agent, environment, state, action):
-    """(delay, reward) pairs the agent counts for this action from day 1."""
-    if agent.vision == "short":
-        _, outcomes = environment.simulate(state, action)
-        return [(delay, reward) for reward, delay in outcomes.values()]
+    """(delay, reward) pairs the agent counts for this action from now.
 
-    events = []
-    horizon = agent.get_horizon(state, environment)
-    interval = environment.decision_interval
-    for t in range(horizon):
-        _, outcomes = environment.simulate(state, action)
-        for reward, delay in outcomes.values():
-            events.append((delay + t * interval, reward))
-    return events
+    short vision => one pair (instantaneous); long => full choice_horizon.
+    """
+    return agent.choice_horizon(state, action, environment)
 
 
 def bundle_value_at(agent, events, at_time):
-    """Sum of hyperbolic values of rewards still outstanding at `at_time`."""
+    """Sum of individually discounted rewards still outstanding at `at_time`."""
     return sum(
         agent.value_function(reward, delay - at_time)
         for delay, reward in events
@@ -71,38 +64,35 @@ ss_events = horizon_events(agent, environment, state, "snack")
 ll_events = horizon_events(agent, environment, state, "resist")
 
 ll_delay = environment.rewards["LL"]["delay"]
-# Peak of the classic sail = whole LL bundle valued when the first LL arrives
-ll_value = bundle_value_at(agent, ll_events, ll_delay)
-# SS is immediate: day-1 aggregate (same as action_values["snack"])
-ss_value = bundle_value_at(agent, ss_events, 0)
+# Sail height at t = discount-each-then-sum of LLs still left (agent rule)
+ss_value = bundle_value_at(agent, ss_events, 0)  # == action_values["snack"] when long
 
 fig, axes = plt.subplots()
 
-# LL sail: treat that bundle peak as a single delayed reward
 xs, ys = [], []
 for t in range(ll_delay + 1):
-    distance = ll_delay - t
-    value = agent.value_function(ll_value, distance)
     xs.append(t)
-    ys.append(value)
+    ys.append(bundle_value_at(agent, ll_events, t))
 
 axes.plot(xs, ys, color=COLORS["resist"], label="resist")
 axes.axvline(ll_delay, linestyle=":", color=COLORS["resist"], alpha=0.5)
 
 perceived_ll = ys[0]
+ll_tip = ys[-1]
 axes.scatter(0, perceived_ll, s=50, color=COLORS["resist"], zorder=5)
 axes.text(-1, perceived_ll, f"{perceived_ll:.2f}", color=COLORS["resist"],
           va="bottom", ha="right", size=12)
-axes.scatter(ll_delay, ys[-1], s=50, color=COLORS["resist"], zorder=5)
-axes.text(ll_delay, ys[-1], f"  {ys[-1]:.2f}", color=COLORS["resist"],
+axes.scatter(ll_delay, ll_tip, s=50, color=COLORS["resist"], zorder=5)
+axes.text(ll_delay, ll_tip, f"  {ll_tip:.2f}", color=COLORS["resist"],
           va="bottom", ha="left", size=12)
 
-# SS: single dot at the day-1 aggregate
+# SS: single dot at the day-1 aggregate (discount each SS, then sum)
 axes.scatter(0, ss_value, s=50, color=COLORS["snack"], zorder=5, label="snack")
-axes.text(-1, ss_value, f"{ss_value:.2f}", color=COLORS["snack"],
+axes.text(-1, ss_value-2, f"{ss_value:.2f}", color=COLORS["snack"],
+
           va="bottom", ha="right", size=12)
 
-y_max = max(ll_value, ss_value)
+y_max = max(max(ys) if ys else 0, ss_value)
 axes.set_xlim(-max(2, ll_delay * 0.2), ll_delay + max(1, ll_delay * 0.15))
 axes.set_ylim(0, y_max * 1.15 if y_max else 1)
 axes.set_xlabel("Hours from now")
@@ -112,8 +102,8 @@ axes.legend(loc="upper left")
 
 print(f"Perceived values on day 1: snack={action_values['snack']:.4f}  "
       f"resist={action_values['resist']:.4f}")
-print(f"Aggregated valuesof each option on day 1:    snack={ss_value:.4f}  resist peak={ll_value:.4f}")
+print(f"Sail endpoints:            snack={ss_value:.4f}  "
+      f"resist@0={perceived_ll:.4f}  resist@first LL={ll_tip:.4f}")
 print(f"Would choose {action}")
 
 plt.show()
-

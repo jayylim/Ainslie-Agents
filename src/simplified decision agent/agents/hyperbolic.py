@@ -17,6 +17,12 @@ class HypAgent:
         return reward / (1 + self.discount_factor * distance) # hyperbolic discounting formula
 
     def get_horizon(self, state, environment):
+        """Number of decision nodes counted from `state` (inclusive).
+        short vision => always 1 
+        long vision  => self.horizon, capped by remaining env decisions if finite.
+        """
+        if self.vision == "short":
+            return 1
 
         if self.horizon == 0:
             raise ValueError("Horizon cannot be 0")
@@ -38,10 +44,13 @@ class HypAgent:
 
         raise ValueError("Horizon must be set as timeline is infinite") # if the horizon is not set and the environment is infinite, raise an error
 
-    # making a bundled choice
-    def aggregate_value(self, state, action, environment):
-        """Sum discounted value of repeating `action` over the vision horizon."""
-        total_value = 0
+    # Array for the horizon of choices agent can simulate
+    def choice_horizon(self, state, action, environment):
+        """(effective_delay, reward) pairs counted from each `state` (decision node) over the vision horizon.
+
+        Delays are relative to the current decision (same terms as aggregate_value).
+        """
+        events = []
         current_state = state
         horizon = self.get_horizon(state, environment)
         interval = getattr(environment, "decision_interval", 1)
@@ -49,13 +58,21 @@ class HypAgent:
         for t in range(horizon):
             next_state, outcomes = environment.simulate(current_state, action)
             for reward, delay in outcomes.values():
-                effective_delay = delay + t * interval
-                total_value += self.value_function(reward, effective_delay)
+                events.append((delay + t * interval, reward))
             current_state = next_state
 
-        return total_value
+        return events
+
+    # making a bundled choice across the horizon
+    def aggregate_value(self, state, action, environment):
+        """Sum discounted value of repeating `action` over the vision horizon."""
+        return sum(
+            self.value_function(reward, delay)
+            for delay, reward in self.choice_horizon(state, action, environment)
+        )
 
     def evaluate_action(self, state, action, environment):
+        # short vision: evaluate the immediate reward and skip aggregate
         if self.vision == "short":
             _, outcomes = environment.simulate(state, action)
             return max(

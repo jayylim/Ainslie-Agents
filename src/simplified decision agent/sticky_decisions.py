@@ -31,7 +31,7 @@ b                  the other action (not a)
 a_t                action on foresight day t (random under stickiness)
 t                  foresight day index, t = 0 .. horizon-1 (0 = today)
 sticking           probability that on day t, the agent makes the same choice as day 0
-horizon            planning horizon (# of decision nodes), from get_horizon
+horizon            # of decision nodes from get_horizon (short vision => 1)
 decision_interval  hours between choice nodes (Delta)
 discount_factor    k in V_hyp
 reward_a, delay_a  reward magnitude and base delay for action a's offer
