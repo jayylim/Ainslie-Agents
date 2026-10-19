@@ -21,8 +21,8 @@ env_params = {
     "start": 0,
     "decision_interval": 24,  # hours between decisions
     "rewards": {
-        "SS": {"value": 5, "delay": 0},   # snack now
-        "LL": {"value": 30, "delay": 12},  # hours after choice until weigh-in
+        "SS": {"value": 2, "delay": 0},   # snack now
+        "LL": {"value": 10, "delay": 12},  # hours after choice until weigh-in
     },
 }
 
