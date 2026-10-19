@@ -1,5 +1,6 @@
 """
-Classic Ainslie sail from day-1 horizon outcomes.
+Shows the effective sail that the observer currently sees: the aggregate of
+all discounted values across their vision horizon.
 
 Matches HypAgent: each reward is discounted from the current decision, then
 those values are summed (agents.hyperbolic.HypAgent.aggregate_value).

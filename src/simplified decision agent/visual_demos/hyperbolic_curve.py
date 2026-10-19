@@ -1,5 +1,6 @@
 """
-Plot how a hyperbolic value curve for a delayed reward shifts left over time.
+Very simplified visualisation of how a hyperbolically discounted reward looks
+as the agent approaches its delivery time.
 
 Run from the package root:
 
